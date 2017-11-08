@@ -1,6 +1,6 @@
 {
   "name": "@frontender-magazine/fm-article",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "SDK for article service api",
   "main": "lib/index.js",
   "scripts": {
