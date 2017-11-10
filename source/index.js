@@ -53,6 +53,60 @@ export default class ArticleService extends TMMicroServiceAPI {
   };
 
   /**
+   * Get Article connected to this repository name
+   *
+   * @method get
+   * @async
+   * @public
+   * @memberof ArticleService
+   *
+   * @param {SearchParams} - Object with search params
+   * @return {ArticleList} - array of posts
+   * @throw {ErrorServerResponse} - server response with error status
+   *
+   * @example <caption>Read articles list</caption>
+   * (async () => {
+   *   const Article = new ArticleService('https://article.frontender.info/', 'Bearer 8237612j.h3g12jh.32j13h');
+   *   const list = await Article.get();
+   * })();
+   */
+  getByReponame = async reponame => {
+    const response = await super.request(`${this.url}/repository/${reponame}`);
+    if (response.ok) {
+      const json = await response.json();
+      return json;
+    }
+    throw new ErrorServerResponse(response.status, response.statusText);
+  };
+
+  /**
+   * Get Article connected to this repository name
+   *
+   * @method get
+   * @async
+   * @public
+   * @memberof ArticleService
+   *
+   * @param {SearchParams} - Object with search params
+   * @return {ArticleList} - array of posts
+   * @throw {ErrorServerResponse} - server response with error status
+   *
+   * @example <caption>Read articles list</caption>
+   * (async () => {
+   *   const Article = new ArticleService('https://article.frontender.info/', 'Bearer 8237612j.h3g12jh.32j13h');
+   *   const list = await Article.get();
+   * })();
+   */
+  getById = async id => {
+    const response = await super.request(`${this.url}/${id}`);
+    if (response.ok) {
+      const json = await response.json();
+      return json;
+    }
+    throw new ErrorServerResponse(response.status, response.statusText);
+  };
+
+  /**
    * Create article
    *
    * @method post
