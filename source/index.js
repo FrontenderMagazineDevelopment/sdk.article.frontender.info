@@ -46,8 +46,11 @@ export default class ArticleService extends TMMicroServiceAPI {
       },
     });
     if (response.ok) {
-      const json = await response.json();
-      return json;
+      const items = await response.json();
+      return {
+        items,
+        headers: response.headers,
+      };
     }
     throw new ErrorServerResponse(response.status, response.statusText);
   };
