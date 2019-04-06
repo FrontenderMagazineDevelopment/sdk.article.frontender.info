@@ -3,4 +3,11 @@ source
 node_modules
 *.log
 /coverage
+public
 .DS_Store
+.babelrc
+.editorconfig
+.eslintrc
+.gitignore
+.gitlab-ci.yml
+.npmignore

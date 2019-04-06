@@ -1,5 +1,8 @@
-import 'babel-polyfill';
-import { TMMicroServiceAPI, ErrorNotFound, ErrorServerResponse } from 'tm-service-api';
+import {
+  MicroServiceAPI,
+  ErrorNotFound,
+  ErrorServerResponse
+} from "@frontender-magazine/service-api";
 
 /**
  * Article Service API
@@ -12,13 +15,13 @@ import { TMMicroServiceAPI, ErrorNotFound, ErrorServerResponse } from 'tm-servic
  * @param {string} url - service url
  * @param {string | null} [token = null] - user access tocken if available
  */
-export default class ArticleService extends TMMicroServiceAPI {
+export default class ArticleService extends MicroServiceAPI {
   /**
    * Object with class service messages
    * @type {Object}
    */
   static messages = {
-    articleNotFound: 'User not found',
+    articleNotFound: "User not found"
   };
 
   /**
@@ -35,21 +38,21 @@ export default class ArticleService extends TMMicroServiceAPI {
    *
    * @example <caption>Read articles list</caption>
    * (async () => {
-   *   const Article = new ArticleService('https://article.frontender.info/', 'Bearer 8237612j.h3g12jh.32j13h');
+   *   const Article = new ArticleService('https://article.frontender.info/');
    *   const list = await Article.get();
    * })();
    */
   get = async options => {
-    const response = await super.request(`${this.url}`, {
+    const response = await super.request(this.url, {
       data: {
-        ...options,
-      },
+        ...options
+      }
     });
     if (response.ok) {
       const items = await response.json();
       return {
         items,
-        headers: response.headers,
+        headers: response.headers
       };
     }
     throw new ErrorServerResponse(response.status, response.statusText);
@@ -58,7 +61,7 @@ export default class ArticleService extends TMMicroServiceAPI {
   /**
    * Get Article connected to this repository name
    *
-   * @method get
+   * @method getByReponame
    * @async
    * @public
    * @memberof ArticleService
@@ -69,8 +72,8 @@ export default class ArticleService extends TMMicroServiceAPI {
    *
    * @example <caption>Read articles list</caption>
    * (async () => {
-   *   const Article = new ArticleService('https://article.frontender.info/', 'Bearer 8237612j.h3g12jh.32j13h');
-   *   const list = await Article.get();
+   *   const Article = new ArticleService('https://article.frontender.info/');
+   *   const list = await Article.getByReponame('the-art-of-html-semantics-pt1');
    * })();
    */
   getByReponame = async reponame => {
@@ -85,7 +88,7 @@ export default class ArticleService extends TMMicroServiceAPI {
   /**
    * Get Article connected to this repository name
    *
-   * @method get
+   * @method getById
    * @async
    * @public
    * @memberof ArticleService
@@ -96,8 +99,8 @@ export default class ArticleService extends TMMicroServiceAPI {
    *
    * @example <caption>Read articles list</caption>
    * (async () => {
-   *   const Article = new ArticleService('https://article.frontender.info/', 'Bearer 8237612j.h3g12jh.32j13h');
-   *   const list = await Article.get();
+   *   const Article = new ArticleService('https://article.frontender.info/');
+   *   const list = await Article.getById('5a04f3ee3d3c231d5d8e009d');
    * })();
    */
   getById = async id => {
@@ -135,12 +138,12 @@ export default class ArticleService extends TMMicroServiceAPI {
    */
   post = async user => {
     const options = {
-      method: 'POST',
+      method: "POST",
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+        Accept: "application/json",
+        "Content-Type": "application/json"
       },
-      body: JSON.stringify(user),
+      body: JSON.stringify(user)
     };
     const response = await super.request(`${this.url}`, options);
     if (response.ok) {
@@ -178,19 +181,20 @@ export default class ArticleService extends TMMicroServiceAPI {
    */
   put = async user => {
     const options = {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+        Accept: "application/json",
+        "Content-Type": "application/json"
       },
-      body: JSON.stringify(user),
+      body: JSON.stringify(user)
     };
     const response = await super.request(`${this.url}${user._id}`, options);
     if (response.ok) {
       const json = await response.json();
       return json;
     }
-    if (response.status === 404) throw new ErrorNotFound(ArticleService.messages.userNotFound);
+    if (response.status === 404)
+      throw new ErrorNotFound(ArticleService.messages.userNotFound);
     throw new ErrorServerResponse(response.status, response.statusText);
   };
 
@@ -218,19 +222,20 @@ export default class ArticleService extends TMMicroServiceAPI {
    */
   patch = async user => {
     const options = {
-      method: 'PATCH',
+      method: "PATCH",
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+        Accept: "application/json",
+        "Content-Type": "application/json"
       },
-      body: JSON.stringify(user),
+      body: JSON.stringify(user)
     };
     const response = await super.request(`${this.url}${user._id}`, options);
     if (response.ok) {
       const json = await response.json();
       return json;
     }
-    if (response.status === 404) throw new ErrorNotFound(ArticleService.messages.userNotFound);
+    if (response.status === 404)
+      throw new ErrorNotFound(ArticleService.messages.userNotFound);
     throw new ErrorServerResponse(response.status, response.statusText);
   };
 
@@ -319,7 +324,8 @@ export default class ArticleService extends TMMicroServiceAPI {
       const json = await response.json();
       return json;
     }
-    if (response.status === 404) throw new ErrorNotFound(ArticleService.messages.userNotFound);
+    if (response.status === 404)
+      throw new ErrorNotFound(ArticleService.messages.userNotFound);
     throw new ErrorServerResponse(response.status, response.statusText);
   };
 
@@ -343,11 +349,12 @@ export default class ArticleService extends TMMicroServiceAPI {
    */
   delete = async id => {
     const options = {
-      method: 'DELETE',
+      method: "DELETE"
     };
     const response = await super.request(`${this.url}${id}`, options);
     if (response.ok) return;
-    if (response.status === 404) throw new ErrorNotFound(ArticleService.messages.articleNotFound);
+    if (response.status === 404)
+      throw new ErrorNotFound(ArticleService.messages.articleNotFound);
     throw new ErrorServerResponse(response.status, response.statusText);
   };
 }

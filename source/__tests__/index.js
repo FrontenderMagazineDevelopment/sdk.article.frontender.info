@@ -1,77 +1,77 @@
-import 'isomorphic-fetch';
 import nock from 'nock';
-import get from 'get';
-import UserService from '../index';
+import ArticleService from '../index';
 
-const serviceUrl = 'https://article.frontender.info/';
+const articleGet = require('../__mocks__/article_get.json');
+const articlesGet = require('../__mocks__/articles_get.json');
+
+const serviceUrl = 'https://article.service';
 
 describe('Article API', () => {
-  it('should return list of post on get request: ', async () => {
-    nock(/[.]+/)
-      .get('/posts')
-      .reply(200, get);
+  describe('articles endpoint', () => {
+    it('should return list of articles: ', async () => {
+      nock(/[.]+/)
+        .get('/')
+        .reply(200, articlesGet);
 
-    const user = new UserService(serviceUrl);
-    const responce = await user.get();
-    expect(responce).toEqual(get);
+      const article = new ArticleService(serviceUrl);
+      const responce = await article.get();
+
+      expect(responce).toEqual({
+        headers: { _headers: { 'content-type': ['application/json'] } },
+        items: articlesGet,
+      });
+    });
+
+    it('should throw error if server failed: ', async () => {
+      nock(/[.]+/)
+        .get('/')
+        .reply(500);
+
+      try {
+        const article = new ArticleService(serviceUrl);
+        await article.get();
+      } catch (error) {
+        expect(error.statusCode).toEqual(500);
+      }
+    });
   });
 
-  it('should create post on post request: ', async () => {
-    const answer = {
-      title: 'My Title',
-      body: 'My Text',
-      id: 101,
-    };
-    nock(/[.]+/)
-      .post('/posts')
-      .reply(200, answer);
+  describe('article endpoint', () => {
+    it('should return article by repository name: ', async () => {
+      nock(/[.]+/)
+        .get('/repository/the-art-of-html-semantics-pt1')
+        .reply(200, articleGet);
 
-    const user = new UserService(serviceUrl);
-    const responce = await user.post({});
-    expect(responce).toEqual(answer);
-  });
+      const article = new ArticleService(serviceUrl);
+      const responce = await article.getByReponame('the-art-of-html-semantics-pt1');
+      expect(responce).toEqual(articleGet);
+    });
 
-  it('should return specific post on get request with post id: ', async () => {
-    const answer = {
-      id: 1,
-      userId: 1,
-      title: 'sunt aut facere repellat provident occaecati excepturi optio reprehenderit',
-      body:
-        'quia et suscipit suscipit recusandae consequuntur expedita et cum reprehenderit molestiae ut ut quas totam nostrum rerum est autem sunt rem eveniet architecto',
-    };
-    nock(/[.]+/)
-      .get('/posts/1')
-      .reply(200, answer);
+    it('should throw error if server failed: ', async () => {
+      nock(/[.]+/)
+        .get('/repository/the-art-of-html-semantics-pt1')
+        .reply(500);
 
-    const user = new UserService(serviceUrl);
-    const responce = await user.details(1);
-    expect(responce).toEqual(answer);
-  });
+      try {
+        const article = new ArticleService(serviceUrl);
+        await article.getByReponame('the-art-of-html-semantics-pt1');
+      } catch (error) {
+        expect(error.statusCode).toEqual(500);
+      }
+    });
 
-  it('should throw Not Found error if you request post with id that do not exists: ', async () => {
-    nock(/[.]+/)
-      .get('/posts/1')
-      .reply(404);
+    it('should throw error if article not found: ', async () => {
+      nock(/[.]+/)
+        .get('/repository/the-art-of-html-semantics-pt1')
+        .reply(404);
 
-    const user = new UserService(serviceUrl);
-    try {
-      await user.details(1);
-    } catch (error) {
-      expect(error.statusCode).toEqual(404);
-      expect(error.statusText).toEqual('Not Found');
-    }
-  });
-
-  it('should throw Server Responce error if you request post with id that do not exists: ', async () => {
-    nock(/[.]+/)
-      .get('/posts/1')
-      .reply(500);
-
-    const user = new UserService(serviceUrl);
-    try {
-      await user.details(1);
-    } catch (error) {
-      expect(error.statusCode).toEqual(500);
-    }
+      try {
+        const article = new ArticleService(serviceUrl);
+        await article.getByReponame('the-art-of-html-semantics-pt1');
+      } catch (error) {
+        expect(error.statusCode).toEqual(404);
+        expect(error.statusText).toEqual('Not Found');
+      }
+    });
   });
 });
