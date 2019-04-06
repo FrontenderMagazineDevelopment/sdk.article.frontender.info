@@ -8,6 +8,8 @@ public
 .babelrc
 .editorconfig
 .eslintrc
+.eslintignore
 .gitignore
 .gitlab-ci.yml
 .npmignore
+.huskyrc

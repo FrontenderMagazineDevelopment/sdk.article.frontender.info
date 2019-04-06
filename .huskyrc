@@ -1,6 +1,6 @@
 {
   "hooks": {
-    "precommit": "git add . -A && lint-staged",
-    "commitmsg": "validate-commit-msg"
+    "pre-commit": "git add . -A && lint-staged",
+    "commit-msg": "validate-commit-msg"
   }
 }
